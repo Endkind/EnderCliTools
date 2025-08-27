@@ -111,7 +111,7 @@ jobs:
       - name: Install WiX Toolset (Windows)
         if: runner.os == 'Windows'
         shell: pwsh
-        run: winget install WiXToolset.WiXToolset
+        run: choco install wixtoolset --no-progress -y
 
       - name: Install cargo-wix (Windows)
         if: runner.os == 'Windows'
