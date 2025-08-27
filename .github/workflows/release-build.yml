@@ -1,0 +1,99 @@
+name: Release Build (Linux, Windows)
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: 'release-${{ github.ref }}'
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            exe_suffix: ""
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            exe_suffix: ".exe"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          target: ${{ matrix.target }}
+
+      - name: Cache cargo
+        uses: Swatinem/rust-cache@v2
+
+      - name: Determine binary name (Linux/macOS)
+        if: runner.os != 'Windows'
+        run: |
+          sudo apt-get update && sudo apt-get install -y jq
+          META=$(cargo metadata --no-deps --format-version=1)
+          BIN_NAME=$(echo "$META" | jq -r '
+            .packages[0] as $p
+            | ($p.targets[] | select(.kind[]=="bin") | .name) // $p.name
+          ')
+          echo "BIN_NAME=$BIN_NAME" >> $GITHUB_ENV
+
+      - name: Determine binary name (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $meta = cargo metadata --no-deps --format-version=1 | ConvertFrom-Json
+          $pkg  = $meta.packages[0]
+          $bin  = ($pkg.targets | Where-Object { $_.kind -contains "bin" } | Select-Object -First 1).name
+          if (-not $bin) { $bin = $pkg.name }
+          echo "BIN_NAME=$bin" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: Build (release)
+        run: cargo build --release --target ${{ matrix.target }}
+
+      - name: Strip binary (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          BIN="target/${{ matrix.target }}/release/${BIN_NAME}"
+          if command -v strip >/dev/null 2>&1; then strip "$BIN" || true; fi
+
+      - name: Prepare dist folder
+        run: mkdir -p dist
+
+      - name: Copy binary to dist with release name (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          SRC="target/${{ matrix.target }}/release/${BIN_NAME}"
+          DST="dist/${BIN_NAME}-${{ github.ref_name }}-${{ matrix.target }}"
+          install -Dm755 "$SRC" "$DST"
+          echo "ASSET_PATH=$DST" >> $GITHUB_ENV
+
+      - name: Package (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $src = "target/${{ matrix.target }}/release/${env:BIN_NAME}${{ matrix.exe_suffix }}"
+          $dst = "dist/${env:BIN_NAME}-${{ github.ref_name }}-${{ matrix.target }}${{ matrix.exe_suffix }}"
+          New-Item -ItemType Directory -Force -Path "dist" | Out-Null
+          Copy-Item $src $dst -Force
+          echo "ASSET_PATH=$dst" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: Upload Release Asset
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ env.ASSET_PATH }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
