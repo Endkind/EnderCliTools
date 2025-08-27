@@ -2,9 +2,16 @@
 name = "EnderCliTools"
 version = "0.0.1"
 edition = "2024"
+authors = ["Endkind <endkind.ender@gmail.com>"]
+license = "MIT"
+description = "A collection of CLI utilities that enhance and streamline everyday terminal workflows."
+repository = "https://github.com/Endkind/EnderCliTools"
 
 [dependencies]
 clap = { version = "4.5.46", features = ["derive"] }
 comfy-table = { version = "7.1.4" }
 anyhow = { version = "1.0.99" }
 atty = { version = "0.2.14" }
+
+[package.metadata.wix]
+eula = false
