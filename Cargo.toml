@@ -15,3 +15,17 @@ atty = { version = "0.2.14" }
 
 [package.metadata.wix]
 eula = false
+
+[package.metadata.deb]
+maintainer = "Endkind <endkind.ender@gmail.com>"
+copyright = "2025, Endkind"
+license-file = ["LICENSE", "0"]
+extended-description = "EnderCliTools is a lightweight collection of CLI utilities that make working in the terminal faster and more convenient."
+section = "utils"
+priority = "optional"
+depends = ""
+assets = [
+    ["target/release/EnderCliTools", "/usr/bin/enderclitools", "755"],
+    ["debian-bin/ect", "/usr/bin/ect", "755"],
+    ["debian-bin/dps", "/usr/bin/dps", "755"],
+]
