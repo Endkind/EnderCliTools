@@ -130,6 +130,17 @@ jobs:
 
       # Upload Release Assets
 
+      - name: Debug (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          echo $env:GITHUB_ENV
+
+      - name: Debug (Linux)
+        if: runner.os != 'Windows'
+        run: |
+          cat $GITHUB_ENV
+
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v2
         with:
@@ -139,4 +150,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      #endregiin
+      #endregion
