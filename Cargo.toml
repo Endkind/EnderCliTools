@@ -1,0 +1,10 @@
+[package]
+name = "EnderCliTools"
+version = "0.0.1"
+edition = "2024"
+
+[dependencies]
+clap = { version = "4.5.46", features = ["derive"] }
+comfy-table = { version = "7.1.4" }
+anyhow = { version = "1.0.99" }
+atty = { version = "0.2.14" }
