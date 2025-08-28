@@ -8,11 +8,11 @@ pub fn run(args: ConfigArgs) -> Result<()> {
         ConfigCommands::Set(args) => {
             set(args)
         }
-        ConfigCommands::Reset(args) => {
-            reset(args)
-        }
         ConfigCommands::Get(args) => {
             get(args)
+        }
+        ConfigCommands::Reset(args) => {
+            reset(args)
         }
     }
 }
@@ -26,24 +26,6 @@ fn set(args: SetConfigArgs) -> Result<()> {
 
     if let Some(modifier) = args.table_modifier {
         cfg.table.modifier = modifier;
-    }
-
-    cfg.save()
-}
-
-fn reset(args: ResetConfigArgs) -> Result<()> {
-    let mut cfg = Config::load()?;
-
-    if args.all {
-        cfg = Config::default();
-    }
-
-    if args.table_preset {
-        cfg.table.preset = Config::default().table.preset;
-    }
-
-    if args.table_modifier {
-        cfg.table.modifier = Config::default().table.modifier;
     }
 
     cfg.save()
@@ -68,4 +50,22 @@ fn get(mut args: GetConfigArgs) -> Result<()> {
     println!("{}", table);
 
     Ok(())
+}
+
+fn reset(args: ResetConfigArgs) -> Result<()> {
+    let mut cfg = Config::load()?;
+
+    if args.all {
+        cfg = Config::default();
+    }
+
+    if args.table_preset {
+        cfg.table.preset = Config::default().table.preset;
+    }
+
+    if args.table_modifier {
+        cfg.table.modifier = Config::default().table.modifier;
+    }
+
+    cfg.save()
 }
