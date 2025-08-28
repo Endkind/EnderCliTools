@@ -122,8 +122,11 @@
                                     Source='$(var.CargoTargetBinDir)\EnderCliTools.exe'
                                     KeyPath='yes'/>
                             </Component>
-                            <Component Id='Aliases' Guid='de1ac05d-72aa-4814-95dd-a0d483ae8e3f'>
+
+                            <Component Id='AliasEct' Guid='*'>
                                 <File Id='AliasEct' Name='ect.cmd' DiskId='1' Source='wix\alias\ect.cmd' KeyPath='yes'/>
+                            </Component>
+                            <Component Id='AliasDps' Guid='*'>
                                 <File Id='AliasDps' Name='dps.cmd' DiskId='1' Source='wix\alias\dps.cmd'/>
                             </Component>
                         </Directory>
@@ -149,7 +152,8 @@
 
             <ComponentRef Id='binary0'/>
 
-            <ComponentRef Id="Aliases"/>
+            <ComponentRef Id="AliasEct"/>
+            <ComponentRef Id="AliasDps"/>
 
             <Feature
                 Id='Environment'
