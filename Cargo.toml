@@ -1,6 +1,6 @@
 [package]
 name = "EnderCliTools"
-version = "0.0.1"
+version = "0.1.0"
 edition = "2024"
 authors = ["Endkind <endkind.ender@gmail.com>"]
 license = "MIT"
@@ -12,6 +12,9 @@ clap = { version = "4.5.46", features = ["derive"] }
 comfy-table = { version = "7.1.4" }
 anyhow = { version = "1.0.99" }
 atty = { version = "0.2.14" }
+serde = { version = "1.0.219", features = ["derive"] }
+toml = { version = "0.9.5" }
+directories = { version = "6.0.0" }
 
 [package.metadata.wix]
 eula = false
