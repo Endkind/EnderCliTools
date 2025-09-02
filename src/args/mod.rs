@@ -6,7 +6,12 @@ pub mod dps;
 pub mod config;
 
 #[derive(Parser, Debug)]
-#[command(name="EnderCliTools", author="Endkind Ender", version, about="EnderCliTools is a lightweight collection of CLI utilities that make working in the terminal faster and more convenient.")]
+#[command(
+    name="EnderCliTools",
+    author="Endkind Ender",
+    version,
+    about="EnderCliTools is a lightweight collection of CLI utilities that make working in the terminal faster and more convenient."
+)]
 pub struct Cli {
     #[command(subcommand)]
     pub command: Commands,
