@@ -1,5 +1,6 @@
 use clap::Args;
-use crate::config::model::{TablePresets, TableModifiers};
+use crate::config::model::dps::DpsHeader;
+use crate::config::model::table::{TablePresets, TableModifiers};
 
 #[derive(Args, Debug)]
 /// Pretty replacement for `docker ps`
@@ -11,4 +12,6 @@ pub struct DpsArgs {
     pub table_preset: Option<TablePresets>,
     #[arg(long, value_enum)]
     pub table_modifier: Option<TableModifiers>,
+    #[arg(long, value_enum)]
+    pub headers: Option<Vec<DpsHeader>>,
 }
