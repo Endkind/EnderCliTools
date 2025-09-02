@@ -1,12 +1,12 @@
 use comfy_table:: {Cell, ContentArrangement, Table};
-use crate::config::model::{TableModifiers, TablePresets};
+use crate::config::model::table::{TableModifiers, TablePresets};
 
 pub type TableRow = Vec<String>;
 
 pub fn build_table(headers: &TableRow, rows: Option<&[TableRow]>, preset: Option<&TablePresets>, modifier: Option<&TableModifiers>) -> Table {
     let mut table = Table::new();
-    let preset = preset.unwrap_or(&TablePresets::UTF8_FULL).to_preset();
-    let modifier = modifier.unwrap_or(&TableModifiers::UTF8_ROUND_CORNERS).to_modifier();
+    let preset = preset.unwrap_or(&TablePresets::Utf8Full).to_preset();
+    let modifier = modifier.unwrap_or(&TableModifiers::Utf8RoundCorners).to_modifier();
 
     table
         .load_preset(preset)

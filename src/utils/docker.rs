@@ -1,12 +1,14 @@
 use std::io::{self, Read};
 use std::process::Command;
 use anyhow::{bail, Context, Result};
+use crate::config::Config;
+use crate::config::model::dps::DpsHeader;
 
-pub fn ps(all: bool) -> Result<String> {
+pub fn ps(all: bool, headers: Option<Vec<DpsHeader>>) -> Result<String> {
     let mut args = vec![
         "ps".to_string(),
         "--format".to_string(),
-        "{{.ID}};{{.Names}};{{.Image}};{{.Status}};{{.Ports}}".to_string(),
+        get_headers(headers)?,
     ];
     if all {
         args.insert(1, "-a".to_string());
@@ -27,4 +29,21 @@ pub fn ps(all: bool) -> Result<String> {
             Ok(buf)
         }
     }
+}
+
+fn get_headers(headers: Option<Vec<DpsHeader>>) -> Result<String> {
+    let headers = if let Some(headers) = headers {
+        headers
+    } else {
+        let cfg = Config::load()?;
+        cfg.dps.headers
+    };
+
+    let headers_str = headers
+        .iter()
+        .map(|h| format!("{{{{.{}}}}}", h.display_name()))
+        .collect::<Vec<_>>()
+        .join(";");
+
+    Ok(headers_str)
 }
