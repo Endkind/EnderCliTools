@@ -1,2 +1,2 @@
-pub mod dps;
 pub mod config;
+pub mod dps;

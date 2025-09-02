@@ -1,7 +1,7 @@
-use std::fmt;
 use clap::ValueEnum;
 use comfy_table::{modifiers, presets};
 use serde::{Deserialize, Serialize};
+use std::fmt;
 
 #[derive(Debug, Serialize, Deserialize, Default)]
 pub struct TableConfig {
@@ -9,7 +9,7 @@ pub struct TableConfig {
     pub modifier: TableModifiers,
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone, ValueEnum)]
+#[derive(Debug, Serialize, Deserialize, Clone, ValueEnum, Default)]
 pub enum TablePresets {
     AsciiFull,
     AsciiFullCondensed,
@@ -18,6 +18,7 @@ pub enum TablePresets {
     AsciiBordersOnlyCondensed,
     AsciiHorizontalOnly,
     AsciiMarkdown,
+    #[default]
     Utf8Full,
     Utf8FullCondensed,
     Utf8NoBorders,
@@ -29,12 +30,6 @@ pub enum TablePresets {
 impl fmt::Display for TablePresets {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{:?}", self)
-    }
-}
-
-impl Default for TablePresets {
-    fn default() -> Self {
-        TablePresets::Utf8Full
     }
 }
 
@@ -58,21 +53,16 @@ impl TablePresets {
     }
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone, ValueEnum)]
+#[derive(Debug, Serialize, Deserialize, Clone, ValueEnum, Default)]
 pub enum TableModifiers {
+    #[default]
     Utf8RoundCorners,
-    Utf8SolidInnerBorders
+    Utf8SolidInnerBorders,
 }
 
 impl fmt::Display for TableModifiers {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{:?}", self)
-    }
-}
-
-impl Default for TableModifiers {
-    fn default() -> Self {
-        TableModifiers::Utf8RoundCorners
     }
 }
 

@@ -1,6 +1,6 @@
-use std::fmt;
 use clap::ValueEnum;
 use serde::{Deserialize, Serialize};
+use std::fmt;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct DpsConfig {
@@ -15,7 +15,7 @@ impl Default for DpsConfig {
                 DpsHeader::Names,
                 DpsHeader::Image,
                 DpsHeader::Status,
-                DpsHeader::Ports
+                DpsHeader::Ports,
             ],
         }
     }
@@ -33,7 +33,7 @@ pub enum DpsHeader {
     Created,
     Size,
     Labels,
-    Mounts
+    Mounts,
 }
 
 impl fmt::Display for DpsHeader {
