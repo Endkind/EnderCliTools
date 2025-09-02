@@ -1,7 +1,9 @@
+#![allow(clippy::collapsible_else_if)]
+
 mod args;
 mod cmd;
-mod utils;
 mod config;
+mod utils;
 
 use anyhow::Result;
 use args::Cli;

@@ -1,6 +1,6 @@
-use clap::{Args, Subcommand};
 use crate::config::model::dps::DpsHeader;
 use crate::config::model::table::{TableModifiers, TablePresets};
+use clap::{Args, Subcommand};
 
 #[derive(Args, Debug)]
 pub struct SetArgs {

@@ -1,16 +1,16 @@
-use clap::{Parser, Subcommand};
 use crate::args::config::ConfigArgs;
 use crate::args::dps::DpsArgs;
+use clap::{Parser, Subcommand};
 
-pub mod dps;
 pub mod config;
+pub mod dps;
 
 #[derive(Parser, Debug)]
 #[command(
-    name="EnderCliTools",
-    author="Endkind Ender",
+    name = "EnderCliTools",
+    author = "Endkind Ender",
     version,
-    about="EnderCliTools is a lightweight collection of CLI utilities that make working in the terminal faster and more convenient."
+    about = "EnderCliTools is a lightweight collection of CLI utilities that make working in the terminal faster and more convenient."
 )]
 pub struct Cli {
     #[command(subcommand)]

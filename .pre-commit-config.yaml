@@ -7,3 +7,47 @@ repos:
       - id: trailing-whitespace
       - id: check-yaml
       - id: check-added-large-files
+
+  - repo: https://github.com/crate-ci/typos
+    rev: v1.21.0
+    hooks:
+      - id: typos
+        name: typos (autofix)
+        args: [--write-changes]
+
+  - repo: local
+    hooks:
+      - id: cargo-fmt-fix
+        name: cargo fmt (autofix)
+        entry: cargo fmt --all
+        language: system
+        pass_filenames: false
+        types: [rust]
+
+      - id: taplo-format
+        name: taplo format (autofix)
+        entry: taplo format -- -q
+        language: system
+        pass_filenames: false
+        files: ^.*\.toml$
+        additional_dependencies: []
+        stages: [pre-commit]
+
+      - id: cargo-check
+        name: cargo check (workspace)
+        entry: cargo check --workspace --all-features
+        language: system
+        pass_filenames: false
+
+      - id: cargo-clippy
+        name: cargo clippy (deny warnings)
+        entry: cargo clippy --workspace --all-features --all-targets -- -D warnings
+        language: system
+        pass_filenames: false
+
+      # - id: cargo-clippy-fix
+      #   name: cargo clippy (autofix; nightly)
+      #   entry: rustup run nightly cargo clippy --fix -Z unstable-options --workspace --all-features --all-targets --allow-dirty --allow-staged
+      #   language: system
+      #   pass_filenames: false
+      #   stages: [pre-commit]

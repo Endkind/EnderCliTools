@@ -1,9 +1,10 @@
-use std::io::{self, Read};
-use std::process::Command;
-use anyhow::{bail, Context, Result};
 use crate::config::Config;
 use crate::config::model::dps::DpsHeader;
+use anyhow::{Context, Result, bail};
+use std::io::{self, Read};
+use std::process::Command;
 
+#[allow(clippy::too_many_arguments)]
 pub fn ps(
     all: bool,
     headers: Option<Vec<DpsHeader>>,
@@ -14,6 +15,7 @@ pub fn ps(
     quiet: bool,
     size: bool,
 ) -> Result<String> {
+    #[rustfmt::skip]
     let mut args = vec![
         "ps".into(),
         //"--format".into(), get_headers(headers)?,
@@ -55,22 +57,28 @@ pub fn ps(
     let attempt = Command::new("docker").args(&args).output();
 
     match attempt {
-        Ok(out) if out.status.success() => {
-            Ok(String::from_utf8_lossy(&out.stdout).to_string())
-        }
+        Ok(out) if out.status.success() => Ok(String::from_utf8_lossy(&out.stdout).to_string()),
         _ => {
             if atty::is(atty::Stream::Stdin) {
-                bail!("failed to run `docker {}` and no STDIN provided", args.join(" "))
+                bail!(
+                    "failed to run `docker {}` and no STDIN provided",
+                    args.join(" ")
+                )
             }
             let mut buf = String::new();
-            io::stdin().read_to_string(&mut buf).context("reading STDIN")?;
+            io::stdin()
+                .read_to_string(&mut buf)
+                .context("reading STDIN")?;
             Ok(buf)
         }
     }
 }
 
-fn get_headers(headers: Option<Vec<DpsHeader>>, add_headers: Option<Vec<DpsHeader>>) -> Result<String> {
-     let mut headers = if let Some(headers) = headers {
+fn get_headers(
+    headers: Option<Vec<DpsHeader>>,
+    add_headers: Option<Vec<DpsHeader>>,
+) -> Result<String> {
+    let mut headers = if let Some(headers) = headers {
         headers
     } else {
         let cfg = Config::load()?;

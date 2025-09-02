@@ -1,9 +1,9 @@
 use crate::args::dps::DpsArgs;
-use anyhow::Result;
 use crate::config::Config;
 use crate::config::model::dps::DpsHeader;
 use crate::utils;
 use crate::utils::table::TableRow;
+use anyhow::Result;
 
 pub fn run(args: DpsArgs) -> Result<()> {
     let stdout = utils::docker::ps(
@@ -14,7 +14,7 @@ pub fn run(args: DpsArgs) -> Result<()> {
         args.latest,
         args.no_trunc,
         args.quiet,
-        args.size
+        args.size,
     )?;
     let cfg = Config::load()?;
     let table_preset = args.table_preset.unwrap_or(cfg.table.preset);
@@ -29,7 +29,8 @@ pub fn run(args: DpsArgs) -> Result<()> {
                 .map(|h| h.display_name().into())
                 .collect()
         } else {
-            cfg.dps.headers
+            cfg.dps
+                .headers
                 .iter()
                 .map(|h| h.display_name().into())
                 .collect()
@@ -46,14 +47,22 @@ pub fn run(args: DpsArgs) -> Result<()> {
         }
     }
 
-    let mut table = utils::table::build_table(&table_headers, None, Some(&table_preset), Some(&table_modifier));
+    let mut table = utils::table::build_table(
+        &table_headers,
+        None,
+        Some(&table_preset),
+        Some(&table_modifier),
+    );
 
     for line in stdout.lines() {
         if line.trim().is_empty() {
             continue;
         }
 
-        let mut cols = line.split(';').map(|s| s.trim().to_string()).collect::<TableRow>();
+        let mut cols = line
+            .split(';')
+            .map(|s| s.trim().to_string())
+            .collect::<TableRow>();
         while cols.len() < table_headers.len() {
             cols.push("".to_string());
         }

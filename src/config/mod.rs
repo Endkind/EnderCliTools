@@ -1,9 +1,9 @@
+use anyhow::{Context, Result};
+use directories::ProjectDirs;
 use std::fs;
 use std::path::PathBuf;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::time::{SystemTime, UNIX_EPOCH};
-use anyhow::{Context, Result};
-use directories::ProjectDirs;
 
 pub mod model;
 pub use model::Config;
@@ -21,7 +21,7 @@ impl Config {
         if !CONFIG_ERROR_REPORTED.swap(true, Ordering::SeqCst) {
             eprintln!(
                 "Failed to load config. Falling back to defaults.\n\
-            Run 'ect config reset' to regenerate your config.toml"
+                Run 'ect config reset' to regenerate your config.toml"
             );
         }
     }

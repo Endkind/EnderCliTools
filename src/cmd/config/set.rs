@@ -5,12 +5,8 @@ use crate::config::Config;
 
 pub fn set(args: SetArgs) -> Result<()> {
     match args.command {
-        SetCommands::Table(args) => {
-            table(args)
-        }
-        SetCommands::Dps(args) => {
-            dps(args)
-        }
+        SetCommands::Table(args) => table(args),
+        SetCommands::Dps(args) => dps(args),
     }
 }
 

@@ -1,9 +1,8 @@
-use clap::Args;
 use crate::config::model::dps::DpsHeader;
-use crate::config::model::table::{TablePresets, TableModifiers};
+use crate::config::model::table::{TableModifiers, TablePresets};
+use clap::Args;
 
 #[derive(Args, Debug)]
-#[command(next_line_help = true)]
 /// Pretty replacement for `docker ps`
 pub struct DpsArgs {
     /// Show all containers (default shows just running)

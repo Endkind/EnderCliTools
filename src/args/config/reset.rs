@@ -1,6 +1,6 @@
+use crate::args::config::Normalizable;
 use clap::{Args, Subcommand};
 use serde::{Deserialize, Serialize};
-use crate::args::config::Normalizable;
 
 #[derive(Args, Debug)]
 pub struct ResetArgs {

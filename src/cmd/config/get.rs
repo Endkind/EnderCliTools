@@ -1,14 +1,19 @@
+use crate::args::config::Normalizable;
+use crate::args::config::get::{GetArgs, GetCommands, GetDpsArgs, GetTableArgs};
+use crate::config::Config;
+use crate::utils::table::{TableRow, build_table};
 use anyhow::Result;
 use comfy_table::Table;
-use crate::args::config::get::{GetArgs, GetCommands, GetDpsArgs, GetTableArgs};
-use crate::args::config::Normalizable;
-use crate::config::Config;
-use crate::utils::table::{build_table, TableRow};
 
 pub fn get(args: GetArgs) -> Result<()> {
     let cfg = Config::load()?;
     let table_headers: TableRow = vec!["OPTION".into(), "VALUE".into()];
-    let mut config_table = build_table(&table_headers, None, Some(&cfg.table.preset), Some(&cfg.table.modifier));
+    let mut config_table = build_table(
+        &table_headers,
+        None,
+        Some(&cfg.table.preset),
+        Some(&cfg.table.modifier),
+    );
 
     if let Some(command) = args.command {
         match command {

@@ -1,9 +1,9 @@
+use dps::DpsConfig;
 use serde::{Deserialize, Serialize};
 use table::TableConfig;
-use dps::DpsConfig;
 
-pub mod table;
 pub mod dps;
+pub mod table;
 
 #[derive(Debug, Serialize, Deserialize, Default)]
 pub struct Config {
