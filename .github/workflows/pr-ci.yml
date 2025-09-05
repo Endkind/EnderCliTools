@@ -1,0 +1,68 @@
+name: PR CI
+
+on:
+  pull_request:
+    branches:
+      - main
+      - master
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  unit-tests:
+    name: Rust Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+
+      - name: Rust cache
+        uses: Swatinem/rust-cache@v2
+
+      - name: Run tests
+        run: cargo test --all --locked --all-features
+
+  pre-commit:
+    name: pre-commit checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Set up Rust (stable)
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+
+      - name: Rust cache
+        uses: Swatinem/rust-cache@v2
+
+      - name: Install Taplo
+        run: cargo install --locked taplo-cli
+
+      - name: Pip cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('.pre-commit-config.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install & run pre-commit
+        run: |
+          python -m pip install --upgrade pip
+          pip install pre-commit
+          pre-commit run --all-files
