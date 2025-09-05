@@ -8,8 +8,8 @@ use anyhow::Result;
 pub fn run(args: DpsArgs) -> Result<()> {
     let stdout = utils::docker::ps(
         args.all,
-        args.headers.clone(),
-        args.add_headers.clone(),
+        args.headers.as_deref(),
+        args.add_headers.as_deref(),
         args.last,
         args.latest,
         args.no_trunc,

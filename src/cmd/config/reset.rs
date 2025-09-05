@@ -21,9 +21,9 @@ pub fn reset(args: ResetArgs) -> Result<()> {
     }
 }
 
-fn table(mut args: ResetTableArgs) -> Result<()> {
+fn table(args: ResetTableArgs) -> Result<()> {
     let mut cfg = Config::load()?;
-    args = args.normalize();
+    let args = args.normalize();
 
     if args.all {
         cfg.table = TableConfig::default();
@@ -40,9 +40,9 @@ fn table(mut args: ResetTableArgs) -> Result<()> {
     cfg.save()
 }
 
-fn dps(mut args: ResetDpsArgs) -> Result<()> {
+fn dps(args: ResetDpsArgs) -> Result<()> {
     let mut cfg = Config::load()?;
-    args = args.normalize();
+    let args = args.normalize();
 
     if args.all {
         cfg.dps = DpsConfig::default();

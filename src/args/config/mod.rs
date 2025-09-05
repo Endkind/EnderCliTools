@@ -29,13 +29,13 @@ pub trait Normalizable: Serialize + Sized {
     }
 }
 
-#[derive(Args, Debug)]
+#[derive(Args, Debug, Clone)]
 pub struct ConfigArgs {
     #[command(subcommand)]
     pub command: ConfigCommands,
 }
 
-#[derive(Subcommand, Debug)]
+#[derive(Subcommand, Debug, Clone)]
 pub enum ConfigCommands {
     Set(SetArgs),
     Get(GetArgs),

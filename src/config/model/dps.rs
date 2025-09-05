@@ -2,7 +2,7 @@ use clap::ValueEnum;
 use serde::{Deserialize, Serialize};
 use std::fmt;
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct DpsConfig {
     pub headers: Vec<DpsHeader>,
 }
@@ -21,7 +21,7 @@ impl Default for DpsConfig {
     }
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone, ValueEnum)]
+#[derive(Debug, Serialize, Deserialize, Clone, Copy, ValueEnum)]
 pub enum DpsHeader {
     Id,
     Names,
