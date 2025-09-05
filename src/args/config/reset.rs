@@ -2,19 +2,19 @@ use crate::args::config::Normalizable;
 use clap::{Args, Subcommand};
 use serde::{Deserialize, Serialize};
 
-#[derive(Args, Debug)]
+#[derive(Args, Debug, Clone, Copy)]
 pub struct ResetArgs {
     #[command(subcommand)]
     pub command: Option<ResetCommands>,
 }
 
-#[derive(Subcommand, Debug)]
+#[derive(Subcommand, Debug, Clone, Copy)]
 pub enum ResetCommands {
     Table(ResetTableArgs),
     Dps(ResetDpsArgs),
 }
 
-#[derive(Args, Debug, Clone, Serialize, Deserialize)]
+#[derive(Args, Debug, Clone, Copy, Serialize, Deserialize)]
 pub struct ResetTableArgs {
     #[arg(short, long)]
     pub all: bool,
@@ -30,7 +30,7 @@ impl Normalizable for ResetTableArgs {
     }
 }
 
-#[derive(Args, Debug, Clone, Serialize, Deserialize)]
+#[derive(Args, Debug, Clone, Copy, Serialize, Deserialize)]
 pub struct ResetDpsArgs {
     #[arg(short, long)]
     pub all: bool,

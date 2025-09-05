@@ -3,13 +3,13 @@ use comfy_table::{modifiers, presets};
 use serde::{Deserialize, Serialize};
 use std::fmt;
 
-#[derive(Debug, Serialize, Deserialize, Default)]
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, Default)]
 pub struct TableConfig {
     pub preset: TablePresets,
     pub modifier: TableModifiers,
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone, ValueEnum, Default)]
+#[derive(Debug, Serialize, Deserialize, Clone, Copy, ValueEnum, Default)]
 pub enum TablePresets {
     AsciiFull,
     AsciiFullCondensed,
@@ -34,7 +34,7 @@ impl fmt::Display for TablePresets {
 }
 
 impl TablePresets {
-    pub fn to_preset(&self) -> &str {
+    pub fn to_preset(self) -> &'static str {
         match self {
             TablePresets::AsciiFull => presets::ASCII_FULL,
             TablePresets::AsciiFullCondensed => presets::ASCII_FULL_CONDENSED,
@@ -53,7 +53,7 @@ impl TablePresets {
     }
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone, ValueEnum, Default)]
+#[derive(Debug, Serialize, Deserialize, Clone, Copy, ValueEnum, Default)]
 pub enum TableModifiers {
     #[default]
     Utf8RoundCorners,
@@ -67,7 +67,7 @@ impl fmt::Display for TableModifiers {
 }
 
 impl TableModifiers {
-    pub fn to_modifier(&self) -> &str {
+    pub fn to_modifier(self) -> &'static str {
         match self {
             TableModifiers::Utf8RoundCorners => modifiers::UTF8_ROUND_CORNERS,
             TableModifiers::Utf8SolidInnerBorders => modifiers::UTF8_SOLID_INNER_BORDERS,

@@ -7,8 +7,8 @@ use std::process::Command;
 #[allow(clippy::too_many_arguments)]
 pub fn ps(
     all: bool,
-    headers: Option<Vec<DpsHeader>>,
-    add_headers: Option<Vec<DpsHeader>>,
+    headers: Option<&[DpsHeader]>,
+    add_headers: Option<&[DpsHeader]>,
     last: i32,
     latest: bool,
     no_trunc: bool,
@@ -32,15 +32,15 @@ pub fn ps(
     }
 
     args.push("--format".to_string());
-    let base_headers = if quiet {
-        Some(vec![DpsHeader::Id])
+    let base_headers: Option<&[DpsHeader]> = if quiet {
+        Some(&[DpsHeader::Id])
     } else {
         headers
     };
     let extra_headers = if quiet {
         None
     } else {
-        let mut extras = add_headers.unwrap_or_default();
+        let mut extras = add_headers.unwrap_or_default().to_vec();
 
         if size {
             extras.push(DpsHeader::Size);
@@ -52,7 +52,7 @@ pub fn ps(
             Some(extras)
         }
     };
-    args.push(get_headers(base_headers, extra_headers)?);
+    args.push(get_headers(base_headers, extra_headers.as_deref())?);
 
     let attempt = Command::new("docker").args(&args).output();
 
@@ -74,26 +74,21 @@ pub fn ps(
     }
 }
 
-fn get_headers(
-    headers: Option<Vec<DpsHeader>>,
-    add_headers: Option<Vec<DpsHeader>>,
-) -> Result<String> {
-    let mut headers = if let Some(headers) = headers {
-        headers
-    } else {
-        let cfg = Config::load()?;
-        cfg.dps.headers
-    };
-
-    if let Some(add_headers) = add_headers {
-        headers.extend(add_headers);
+fn get_headers(headers: Option<&[DpsHeader]>, add_headers: Option<&[DpsHeader]>) -> Result<String> {
+    fn build(h: &[DpsHeader], extra: Option<&[DpsHeader]>) -> String {
+        h.iter()
+            .chain(extra.unwrap_or_default().iter())
+            .map(|hdr| format!("{{{{.{}}}}}", hdr.display_name()))
+            .collect::<Vec<_>>()
+            .join(";")
     }
 
-    let headers_str = headers
-        .iter()
-        .map(|h| format!("{{{{.{}}}}}", h.display_name()))
-        .collect::<Vec<_>>()
-        .join(";");
+    let result = if let Some(h) = headers {
+        build(h, add_headers)
+    } else {
+        let cfg = Config::load()?;
+        build(&cfg.dps.headers, add_headers)
+    };
 
-    Ok(headers_str)
+    Ok(result)
 }

@@ -18,15 +18,15 @@ pub fn get(args: GetArgs) -> Result<()> {
     if let Some(command) = args.command {
         match command {
             GetCommands::Table(args) => {
-                config_table = table(config_table, args)?;
+                table(&mut config_table, &cfg, args)?;
             }
             GetCommands::Dps(args) => {
-                config_table = dps(config_table, args)?;
+                dps(&mut config_table, &cfg, args)?;
             }
         }
     } else {
-        config_table = table(config_table, GetTableArgs::default())?;
-        config_table = dps(config_table, GetDpsArgs::default())?;
+        table(&mut config_table, &cfg, GetTableArgs::default())?;
+        dps(&mut config_table, &cfg, GetDpsArgs::default())?;
     }
 
     println!("{}", config_table);
@@ -34,9 +34,8 @@ pub fn get(args: GetArgs) -> Result<()> {
     Ok(())
 }
 
-fn table(mut config_table: Table, mut args: GetTableArgs) -> Result<Table> {
-    let cfg = Config::load()?;
-    args = args.normalize();
+fn table(config_table: &mut Table, cfg: &Config, args: GetTableArgs) -> Result<()> {
+    let args = args.normalize();
 
     if args.preset || args.all {
         let table_row: TableRow = vec!["table.preset".into(), cfg.table.preset.to_string()];
@@ -47,17 +46,16 @@ fn table(mut config_table: Table, mut args: GetTableArgs) -> Result<Table> {
         config_table.add_row(table_row);
     }
 
-    Ok(config_table)
+    Ok(())
 }
 
-fn dps(mut config_table: Table, mut args: GetDpsArgs) -> Result<Table> {
-    let cfg = Config::load()?;
-    args = args.normalize();
+fn dps(config_table: &mut Table, cfg: &Config, args: GetDpsArgs) -> Result<()> {
+    let args = args.normalize();
 
     if args.headers || args.all {
         let table_row: TableRow = vec!["dps.headers".into(), format!("{:?}", cfg.dps.headers)];
         config_table.add_row(table_row);
     }
 
-    Ok(config_table)
+    Ok(())
 }

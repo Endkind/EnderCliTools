@@ -2,19 +2,19 @@ use crate::args::config::Normalizable;
 use clap::{Args, Subcommand};
 use serde::Serialize;
 
-#[derive(Args, Debug)]
+#[derive(Args, Debug, Clone, Copy)]
 pub struct GetArgs {
     #[command(subcommand)]
     pub command: Option<GetCommands>,
 }
 
-#[derive(Subcommand, Debug)]
+#[derive(Subcommand, Debug, Clone, Copy)]
 pub enum GetCommands {
     Table(GetTableArgs),
     Dps(GetDpsArgs),
 }
 
-#[derive(Args, Debug, Clone, Serialize, Default)]
+#[derive(Args, Debug, Clone, Copy, Serialize, Default)]
 pub struct GetTableArgs {
     #[arg(short, long)]
     pub all: bool,
@@ -30,7 +30,7 @@ impl Normalizable for GetTableArgs {
     }
 }
 
-#[derive(Args, Debug, Clone, Serialize, Default)]
+#[derive(Args, Debug, Clone, Copy, Serialize, Default)]
 pub struct GetDpsArgs {
     #[arg(short, long)]
     pub all: bool,
