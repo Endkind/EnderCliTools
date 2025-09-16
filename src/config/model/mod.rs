@@ -8,6 +8,7 @@ pub mod dps;
 pub mod table;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
+#[serde(default)]
 pub struct Config {
     pub table: TableConfig,
     pub dps: DpsConfig,
