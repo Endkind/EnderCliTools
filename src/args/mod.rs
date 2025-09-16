@@ -1,8 +1,10 @@
 use crate::args::config::ConfigArgs;
+use crate::args::dcps::DcpsArgs;
 use crate::args::dps::DpsArgs;
 use clap::{Parser, Subcommand};
 
 pub mod config;
+pub mod dcps;
 pub mod dps;
 
 #[derive(Parser, Debug)]
@@ -26,5 +28,6 @@ impl Cli {
 #[derive(Subcommand, Debug, Clone)]
 pub enum Commands {
     Dps(DpsArgs),
+    Dcps(DcpsArgs),
     Config(ConfigArgs),
 }

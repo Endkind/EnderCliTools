@@ -1,7 +1,9 @@
+use crate::config::model::dcps::DcpsConfig;
 use dps::DpsConfig;
 use serde::{Deserialize, Serialize};
 use table::TableConfig;
 
+pub mod dcps;
 pub mod dps;
 pub mod table;
 
@@ -9,4 +11,5 @@ pub mod table;
 pub struct Config {
     pub table: TableConfig,
     pub dps: DpsConfig,
+    pub dcps: DcpsConfig,
 }

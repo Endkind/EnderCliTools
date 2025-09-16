@@ -15,6 +15,9 @@ fn main() -> Result<()> {
         args::Commands::Dps(opts) => {
             cmd::dps::run(opts)?;
         }
+        args::Commands::Dcps(opts) => {
+            cmd::dcps::run(opts)?;
+        }
         args::Commands::Config(opts) => {
             cmd::config::run(opts)?;
         }
