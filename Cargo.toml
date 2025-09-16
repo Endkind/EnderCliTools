@@ -1,6 +1,6 @@
 [package]
 name = "EnderCliTools"
-version = "1.1.2"
+version = "1.2.0"
 edition = "2024"
 authors = ["Endkind <endkind.ender@gmail.com>"]
 license = "MIT"
