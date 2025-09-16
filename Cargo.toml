@@ -31,4 +31,5 @@ assets = [
     ["target/release/EnderCliTools", "/usr/bin/enderclitools", "755"],
     ["debian-bin/ect", "/usr/bin/ect", "755"],
     ["debian-bin/dps", "/usr/bin/dps", "755"],
+    ["debian-bin/dcps", "/usr/bin/dcps", "755"],
 ]
