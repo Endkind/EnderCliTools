@@ -3,7 +3,6 @@ name: Release Build (Linux, Windows)
 on:
   release:
     types: [published]
-  workflow_dispatch:
 
 permissions:
   contents: write
@@ -13,8 +12,41 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  check-version:
+    runs-on: ubuntu-latest
+    outputs:
+      version_match: ${{ steps.check.outputs.version_match }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Compare tag with Cargo.toml version
+        id: check
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          RAW_TAG="${{ github.event.release.tag_name }}"
+          CLEAN_TAG="${RAW_TAG#v}"
+          FILE_VERSION=$(grep '^version' Cargo.toml | head -1 | sed -E 's/version\s*=\s*"(.*)"/\1/')
+
+          if [ "$CLEAN_TAG" = "$FILE_VERSION" ]; then
+            echo "version_match=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "version_match=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Delete release & tag if version mismatches
+        if: steps.check.outputs.version_match == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release delete "${{ github.event.release.tag_name }}" -y || true
+          gh api -X DELETE "repos/${{ github.repository }}/git/refs/tags/${{ github.event.release.tag_name }}" || true
+
   build:
     name: Build (${{ matrix.os }})
+    needs: check-version
+    if: needs.check-version.outputs.version_match == 'true'
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
