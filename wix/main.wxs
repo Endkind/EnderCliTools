@@ -130,7 +130,7 @@
                                 <File Id='AliasDps' Name='dps.cmd' DiskId='1' Source='wix\alias\dps.cmd'/>
                             </Component>
                             <Component Id='AliasDcps' Guid='*'>
-                                <File Id='AliasDcps' Name='dps.cmd' DiskId='1' Source='wix\alias\dcps.cmd'/>
+                                <File Id='AliasDcps' Name='dcps.cmd' DiskId='1' Source='wix\alias\dcps.cmd'/>
                             </Component>
                         </Directory>
                     </Directory>
