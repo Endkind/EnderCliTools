@@ -3,6 +3,7 @@ use serde::{Deserialize, Serialize};
 use std::fmt;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(default)]
 pub struct DpsConfig {
     pub headers: Vec<DpsHeader>,
 }

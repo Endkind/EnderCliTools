@@ -1,3 +1,5 @@
+pub mod compose;
+
 use crate::config::Config;
 use crate::config::model::dps::DpsHeader;
 use anyhow::{Context, Result, bail};

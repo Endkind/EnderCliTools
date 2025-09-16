@@ -4,6 +4,7 @@ use serde::{Deserialize, Serialize};
 use std::fmt;
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, Default)]
+#[serde(default)]
 pub struct TableConfig {
     pub preset: TablePresets,
     pub modifier: TableModifiers,
